@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">projekat</string>
+    <string name="reset">Reset</string>
+
+    <string-array name="spinner_elements">
+        <item>Medicinski</item>
+        <item>Kuharski</item>
+        <item>Botanički</item>
+    </string-array>
+</resources>
