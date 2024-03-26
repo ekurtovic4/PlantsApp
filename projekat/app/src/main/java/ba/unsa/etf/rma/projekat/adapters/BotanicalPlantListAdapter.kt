@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
@@ -24,10 +23,10 @@ class BotanicalPlantListAdapter(
     override fun onBindViewHolder(holder: BotanicalPlantViewHolder, position: Int) {
         holder.naziv.text = biljke[position].naziv
         holder.porodica.text = biljke[position].porodica
-        holder.klima.text = biljke[position].klimatskiTipovi[0].toString()
-        holder.zemljiste.text = biljke[position].zemljisniTipovi[0].toString()
+        holder.klima.text = biljke[position].klimatskiTipovi[0].opis
+        holder.zemljiste.text = biljke[position].zemljisniTipovi[0].naziv
         val context: Context = holder.slika.context
-        var id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
+        val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
     }
     fun updatePlants(biljke: List<Biljka>){

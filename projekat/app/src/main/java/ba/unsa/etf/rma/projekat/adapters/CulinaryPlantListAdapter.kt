@@ -22,17 +22,13 @@ class CulinaryPlantListAdapter(
     override fun getItemCount(): Int = biljke.size
     override fun onBindViewHolder(holder: CulinaryPlantViewHolder, position: Int) {
         holder.naziv.text = biljke[position].naziv
-        holder.profil.text = biljke[position].profilOkusa.toString()
-        holder.jelo1.text = "jelo 1"
-        holder.jelo2.text = "jelo 2"
-        holder.jelo3.text = "jelo 3"
-
-        //holder.jelo1.text = biljke[position].jela[0]
-        //holder.jelo2.text = biljke[position].jela[1]
-        //holder.jelo3.text = biljke[position].jela[2]
+        holder.profil.text = biljke[position].profilOkusa.opis
+        holder.jelo1.text = if(biljke[position].jela.size > 0) biljke[position].jela[0] else ""
+        holder.jelo2.text = if(biljke[position].jela.size > 1) biljke[position].jela[1] else ""
+        holder.jelo3.text = if(biljke[position].jela.size > 2) biljke[position].jela[2] else ""
 
         val context: Context = holder.slika.context
-        var id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
+        val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
     }
     fun updatePlants(biljke: List<Biljka>){
