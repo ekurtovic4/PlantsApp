@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.adapters.BotanicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.CulinaryPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.MedicalPlantListAdapter
+import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.dataetc.getBiljke
 
 class MainActivity : AppCompatActivity() {
@@ -55,7 +56,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text: String = mod.selectedItem.toString()
-
                 if(text == "Medicinski")
                     showMedical()
                 else if(text == "Kuharski")
@@ -65,9 +65,36 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        medicalAdapter.setOnClickListener(object :
+            MedicalPlantListAdapter.OnClickListener{
+            override fun onClick(position: Int, model: Biljka) {
+                plantsList = filterMedical(model)
+                medicalAdapter.updatePlants(plantsList)
+            }
+        })
+
+        culinaryAdapter.setOnClickListener(object :
+            CulinaryPlantListAdapter.OnClickListener{
+            override fun onClick(position: Int, model: Biljka) {
+                plantsList = filterCulinary(model)
+                culinaryAdapter.updatePlants(plantsList)
+            }
+        })
+
+        botanicalAdapter.setOnClickListener(object :
+            BotanicalPlantListAdapter.OnClickListener{
+            override fun onClick(position: Int, model: Biljka) {
+                plantsList = filterBotanical(model)
+                botanicalAdapter.updatePlants(plantsList)
+            }
+        })
+
         resetBtn = findViewById(R.id.resetBtn)
         resetBtn.setOnClickListener {
-            //implementirati funkcionalnost
+            plantsList = getBiljke()
+            medicalAdapter.updatePlants(plantsList)
+            culinaryAdapter.updatePlants(plantsList)
+            botanicalAdapter.updatePlants(plantsList)
         }
     }
 
@@ -84,5 +111,32 @@ class MainActivity : AppCompatActivity() {
     private fun showBotanical(){
         plants.adapter = botanicalAdapter
         botanicalAdapter.updatePlants(plantsList)
+    }
+
+    private fun filterMedical(model: Biljka): MutableList<Biljka> {
+        var newPlantsList: MutableList<Biljka> = mutableListOf()
+        for(plant in plantsList){
+            if(plant.medicinskeKoristi.any{it in model.medicinskeKoristi})
+                newPlantsList.add(plant)
+        }
+        return newPlantsList
+    }
+
+    private fun filterCulinary(model: Biljka): MutableList<Biljka> {
+        var newPlantsList: MutableList<Biljka> = mutableListOf()
+        for(plant in plantsList){
+            if(plant.profilOkusa == model.profilOkusa || plant.jela.any{it in model.jela})
+                newPlantsList.add(plant)
+        }
+        return newPlantsList
+    }
+
+    private fun filterBotanical(model: Biljka): MutableList<Biljka> {
+        var newPlantsList: MutableList<Biljka> = mutableListOf()
+        for(plant in plantsList){
+            if(plant.porodica == model.porodica && plant.zemljisniTipovi.any{it in model.zemljisniTipovi} && plant.klimatskiTipovi.any{it in model.klimatskiTipovi})
+                newPlantsList.add(plant)
+        }
+        return newPlantsList
     }
 }

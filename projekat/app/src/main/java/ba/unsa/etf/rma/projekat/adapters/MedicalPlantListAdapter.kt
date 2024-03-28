@@ -3,6 +3,7 @@ package ba.unsa.etf.rma.projekat.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,6 +14,8 @@ import ba.unsa.etf.rma.projekat.R
 class MedicalPlantListAdapter(
     private var biljke: List<Biljka>
 ) : RecyclerView.Adapter<MedicalPlantListAdapter.MedicalPlantViewHolder>() {
+    private var onClickListener : OnClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicalPlantViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -21,15 +24,20 @@ class MedicalPlantListAdapter(
     }
     override fun getItemCount(): Int = biljke.size
     override fun onBindViewHolder(holder: MedicalPlantViewHolder, position: Int) {
-        holder.naziv.text = biljke[position].naziv
-        holder.upozorenje.text = biljke[position].medicinskoUpozorenje
-        holder.korist1.text = if(biljke[position].medicinskeKoristi.size > 0) biljke[position].medicinskeKoristi[0].opis else ""
-        holder.korist2.text = if(biljke[position].medicinskeKoristi.size > 1) biljke[position].medicinskeKoristi[1].opis else ""
-        holder.korist3.text = if(biljke[position].medicinskeKoristi.size > 2) biljke[position].medicinskeKoristi[2].opis else ""
+        val biljka = biljke[position]
+        holder.naziv.text = biljka.naziv
+        holder.upozorenje.text = biljka.medicinskoUpozorenje
+        holder.korist1.text = if(biljka.medicinskeKoristi.size > 0) biljka.medicinskeKoristi[0].opis else ""
+        holder.korist2.text = if(biljka.medicinskeKoristi.size > 1) biljka.medicinskeKoristi[1].opis else ""
+        holder.korist3.text = if(biljka.medicinskeKoristi.size > 2) biljka.medicinskeKoristi[2].opis else ""
 
         val context: Context = holder.slika.context
         val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
+
+        holder.itemView.setOnClickListener{
+            onClickListener?.onClick(position, biljka)
+        }
     }
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
@@ -42,5 +50,11 @@ class MedicalPlantListAdapter(
         val korist1: TextView = itemView.findViewById(R.id.korist1Item)
         val korist2: TextView = itemView.findViewById(R.id.korist2Item)
         val korist3: TextView = itemView.findViewById(R.id.korist3Item)
+    }
+    interface OnClickListener{
+        fun onClick(position: Int, model: Biljka)
+    }
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
     }
 }

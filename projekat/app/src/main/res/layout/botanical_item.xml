@@ -33,7 +33,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
-                android:text="naziv biljke"
+                android:text="@string/naziv_biljke"
                 android:textAlignment="center" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:textAlignment="center"
-                android:text="porodica" />
+                android:text="@string/porodica" />
 
             <TextView
                 android:id="@+id/klimatskiTipItem"
@@ -54,7 +54,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:textAlignment="center"
-                android:text="prvi klimatski tip" />
+                android:text="@string/prvi_klimatski_tip" />
 
             <TextView
                 android:id="@+id/zemljisniTipItem"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:textAlignment="center"
-                android:text="prvi tip zemljista" />
+                android:text="@string/prvi_tip_zemljista" />
         </LinearLayout>
 
     </LinearLayout>

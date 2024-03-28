@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                android:text="naziv biljke"
+                android:text="@string/naziv_biljke"
                 android:textAlignment="center" />
 
             <TextView
@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="10dp"
-                android:text="profil okusa"
+                android:text="@string/profil_okusa"
                 android:textAlignment="center" />
 
             <LinearLayout
@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:text="jelo 1"
+                    android:text="@string/jelo_1"
                     android:textAlignment="center" />
 
                 <TextView
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:text="jelo 2"
+                    android:text="@string/jelo_2"
                     android:textAlignment="center" />
 
                 <TextView
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
-                    android:text="jelo 3"
+                    android:text="@string/jelo_3"
                     android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>

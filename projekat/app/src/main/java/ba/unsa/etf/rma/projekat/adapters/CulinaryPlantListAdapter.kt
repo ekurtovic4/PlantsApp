@@ -13,6 +13,8 @@ import ba.unsa.etf.rma.projekat.R
 class CulinaryPlantListAdapter(
     private var biljke: List<Biljka>
 ) : RecyclerView.Adapter<CulinaryPlantListAdapter.CulinaryPlantViewHolder>() {
+    private var onClickListener : OnClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CulinaryPlantViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -21,15 +23,20 @@ class CulinaryPlantListAdapter(
     }
     override fun getItemCount(): Int = biljke.size
     override fun onBindViewHolder(holder: CulinaryPlantViewHolder, position: Int) {
-        holder.naziv.text = biljke[position].naziv
-        holder.profil.text = biljke[position].profilOkusa.opis
-        holder.jelo1.text = if(biljke[position].jela.size > 0) biljke[position].jela[0] else ""
-        holder.jelo2.text = if(biljke[position].jela.size > 1) biljke[position].jela[1] else ""
-        holder.jelo3.text = if(biljke[position].jela.size > 2) biljke[position].jela[2] else ""
+        val biljka = biljke[position]
+        holder.naziv.text = biljka.naziv
+        holder.profil.text = biljka.profilOkusa.opis
+        holder.jelo1.text = if(biljka.jela.size > 0) biljka.jela[0] else ""
+        holder.jelo2.text = if(biljka.jela.size > 1) biljka.jela[1] else ""
+        holder.jelo3.text = if(biljka.jela.size > 2) biljka.jela[2] else ""
 
         val context: Context = holder.slika.context
         val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
+
+        holder.itemView.setOnClickListener{
+            onClickListener?.onClick(position, biljka)
+        }
     }
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
@@ -42,5 +49,11 @@ class CulinaryPlantListAdapter(
         val jelo1: TextView = itemView.findViewById(R.id.jelo1Item)
         val jelo2: TextView = itemView.findViewById(R.id.jelo2Item)
         val jelo3: TextView = itemView.findViewById(R.id.jelo3Item)
+    }
+    interface OnClickListener{
+        fun onClick(position: Int, model: Biljka)
+    }
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
     }
 }

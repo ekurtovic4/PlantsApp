@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">projekat</string>
     <string name="reset">Reset</string>
+    <string name="naziv_biljke">naziv biljke</string>
+    <string name="porodica">porodica</string>
+    <string name="prvi_klimatski_tip">prvi klimatski tip</string>
+    <string name="prvi_tip_zemljista">prvi tip zemljista</string>
+    <string name="profil_okusa">profil okusa</string>
+    <string name="jelo_1">jelo 1</string>
+    <string name="jelo_2">jelo 2</string>
+    <string name="jelo_3">jelo 3</string>
+    <string name="tekst_upozorenja">tekst upozorenja</string>
+    <string name="korist_1">korist 1</string>
+    <string name="korist_2">korist 2</string>
+    <string name="korist_3">korist 3</string>
 
     <string-array name="spinner_elements">
         <item>Medicinski</item>

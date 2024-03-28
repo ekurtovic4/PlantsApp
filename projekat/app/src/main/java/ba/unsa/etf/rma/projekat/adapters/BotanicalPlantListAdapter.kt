@@ -13,6 +13,8 @@ import ba.unsa.etf.rma.projekat.R
 class BotanicalPlantListAdapter(
     private var biljke: List<Biljka>
 ) : RecyclerView.Adapter<BotanicalPlantListAdapter.BotanicalPlantViewHolder>() {
+    private var onClickListener : OnClickListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BotanicalPlantViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -21,13 +23,19 @@ class BotanicalPlantListAdapter(
     }
     override fun getItemCount(): Int = biljke.size
     override fun onBindViewHolder(holder: BotanicalPlantViewHolder, position: Int) {
-        holder.naziv.text = biljke[position].naziv
-        holder.porodica.text = biljke[position].porodica
-        holder.klima.text = biljke[position].klimatskiTipovi[0].opis
-        holder.zemljiste.text = biljke[position].zemljisniTipovi[0].naziv
+        val biljka = biljke[position]
+        holder.naziv.text = biljka.naziv
+        holder.porodica.text = biljka.porodica
+        holder.klima.text = biljka.klimatskiTipovi[0].opis
+        holder.zemljiste.text = biljka.zemljisniTipovi[0].naziv
+
         val context: Context = holder.slika.context
         val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
+
+        holder.itemView.setOnClickListener{
+            onClickListener?.onClick(position, biljka)
+        }
     }
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
@@ -39,6 +47,12 @@ class BotanicalPlantListAdapter(
         val porodica: TextView = itemView.findViewById(R.id.porodicaItem)
         val klima: TextView = itemView.findViewById(R.id.klimatskiTipItem)
         val zemljiste: TextView = itemView.findViewById(R.id.zemljisniTipItem)
+    }
+    interface OnClickListener{
+        fun onClick(position: Int, model: Biljka)
+    }
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
     }
 }
 
