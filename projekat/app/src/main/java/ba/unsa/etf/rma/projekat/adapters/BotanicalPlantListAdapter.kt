@@ -11,10 +11,9 @@ import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
 
 class BotanicalPlantListAdapter(
-    private var biljke: List<Biljka>
+    private var biljke: List<Biljka>,
+    private val onItemClicked: (biljka: Biljka) -> Unit
 ) : RecyclerView.Adapter<BotanicalPlantListAdapter.BotanicalPlantViewHolder>() {
-    private var onClickListener : OnClickListener? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BotanicalPlantViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -33,9 +32,7 @@ class BotanicalPlantListAdapter(
         val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
 
-        holder.itemView.setOnClickListener{
-            onClickListener?.onClick(position, biljka)
-        }
+        holder.itemView.setOnClickListener{ onItemClicked(biljke[position]) }
     }
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
@@ -47,12 +44,6 @@ class BotanicalPlantListAdapter(
         val porodica: TextView = itemView.findViewById(R.id.porodicaItem)
         val klima: TextView = itemView.findViewById(R.id.klimatskiTipItem)
         val zemljiste: TextView = itemView.findViewById(R.id.zemljisniTipItem)
-    }
-    interface OnClickListener{
-        fun onClick(position: Int, model: Biljka)
-    }
-    fun setOnClickListener(onClickListener: OnClickListener){
-        this.onClickListener = onClickListener
     }
 }
 

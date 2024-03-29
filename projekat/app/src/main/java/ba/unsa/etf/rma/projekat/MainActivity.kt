@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
             false
         )
 
-        medicalAdapter = MedicalPlantListAdapter(listOf())
-        culinaryAdapter = CulinaryPlantListAdapter(listOf())
-        botanicalAdapter = BotanicalPlantListAdapter(listOf())
+        medicalAdapter = MedicalPlantListAdapter(listOf()) { biljka -> filterMedical(biljka) }
+        culinaryAdapter = CulinaryPlantListAdapter(listOf()) { biljka -> filterCulinary(biljka) }
+        botanicalAdapter = BotanicalPlantListAdapter(listOf()) { biljka -> filterBotanical(biljka) }
 
         plants.adapter = medicalAdapter
         medicalAdapter.updatePlants(plantsList)
@@ -65,30 +65,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        medicalAdapter.setOnClickListener(object :
-            MedicalPlantListAdapter.OnClickListener{
-            override fun onClick(position: Int, model: Biljka) {
-                plantsList = filterMedical(model)
-                medicalAdapter.updatePlants(plantsList)
-            }
-        })
-
-        culinaryAdapter.setOnClickListener(object :
-            CulinaryPlantListAdapter.OnClickListener{
-            override fun onClick(position: Int, model: Biljka) {
-                plantsList = filterCulinary(model)
-                culinaryAdapter.updatePlants(plantsList)
-            }
-        })
-
-        botanicalAdapter.setOnClickListener(object :
-            BotanicalPlantListAdapter.OnClickListener{
-            override fun onClick(position: Int, model: Biljka) {
-                plantsList = filterBotanical(model)
-                botanicalAdapter.updatePlants(plantsList)
-            }
-        })
-
         resetBtn = findViewById(R.id.resetBtn)
         resetBtn.setOnClickListener {
             plantsList = getBiljke()
@@ -113,30 +89,33 @@ class MainActivity : AppCompatActivity() {
         botanicalAdapter.updatePlants(plantsList)
     }
 
-    private fun filterMedical(model: Biljka): MutableList<Biljka> {
+    private fun filterMedical(model: Biljka) {
         var newPlantsList: MutableList<Biljka> = mutableListOf()
         for(plant in plantsList){
             if(plant.medicinskeKoristi.any{it in model.medicinskeKoristi})
                 newPlantsList.add(plant)
         }
-        return newPlantsList
+        plantsList = newPlantsList
+        medicalAdapter.updatePlants(plantsList)
     }
 
-    private fun filterCulinary(model: Biljka): MutableList<Biljka> {
+    private fun filterCulinary(model: Biljka) {
         var newPlantsList: MutableList<Biljka> = mutableListOf()
         for(plant in plantsList){
             if(plant.profilOkusa == model.profilOkusa || plant.jela.any{it in model.jela})
                 newPlantsList.add(plant)
         }
-        return newPlantsList
+        plantsList = newPlantsList
+        culinaryAdapter.updatePlants(plantsList)
     }
 
-    private fun filterBotanical(model: Biljka): MutableList<Biljka> {
+    private fun filterBotanical(model: Biljka) {
         var newPlantsList: MutableList<Biljka> = mutableListOf()
         for(plant in plantsList){
             if(plant.porodica == model.porodica && plant.zemljisniTipovi.any{it in model.zemljisniTipovi} && plant.klimatskiTipovi.any{it in model.klimatskiTipovi})
                 newPlantsList.add(plant)
         }
-        return newPlantsList
+        plantsList = newPlantsList
+        botanicalAdapter.updatePlants(plantsList)
     }
 }

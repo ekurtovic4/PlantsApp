@@ -12,10 +12,9 @@ import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
 
 class MedicalPlantListAdapter(
-    private var biljke: List<Biljka>
+    private var biljke: List<Biljka>,
+    private val onItemClicked: (biljka: Biljka) -> Unit
 ) : RecyclerView.Adapter<MedicalPlantListAdapter.MedicalPlantViewHolder>() {
-    private var onClickListener : OnClickListener? = null
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MedicalPlantViewHolder {
         val view = LayoutInflater
             .from(parent.context)
@@ -35,9 +34,7 @@ class MedicalPlantListAdapter(
         val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
         holder.slika.setImageResource(id)
 
-        holder.itemView.setOnClickListener{
-            onClickListener?.onClick(position, biljka)
-        }
+        holder.itemView.setOnClickListener{ onItemClicked(biljke[position]) }
     }
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
@@ -50,11 +47,5 @@ class MedicalPlantListAdapter(
         val korist1: TextView = itemView.findViewById(R.id.korist1Item)
         val korist2: TextView = itemView.findViewById(R.id.korist2Item)
         val korist3: TextView = itemView.findViewById(R.id.korist3Item)
-    }
-    interface OnClickListener{
-        fun onClick(position: Int, model: Biljka)
-    }
-    fun setOnClickListener(onClickListener: OnClickListener){
-        this.onClickListener = onClickListener
     }
 }
