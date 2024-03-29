@@ -5,7 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="@android:color/white">
 
     <Spinner
         android:id="@+id/modSpinner"
@@ -18,7 +19,8 @@
         app:layout_constraintEnd_toStartOf="@+id/resetBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@id/resetBtn"/>
+        app:layout_constraintBaseline_toBaselineOf="@id/resetBtn"
+        android:popupBackground="@android:color/white"/>
 
     <Button
         android:id="@+id/resetBtn"
@@ -31,7 +33,9 @@
         app:layout_constraintBottom_toTopOf="@+id/biljkeRV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/modSpinner"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="#203618"
+        android:textColor="@android:color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/biljkeRV"
