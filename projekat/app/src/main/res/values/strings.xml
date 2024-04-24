@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">projekat</string>
+    <string name="reset">Reset</string>
+    <string name="naziv_biljke">naziv biljke</string>
+    <string name="porodica">porodica</string>
+    <string name="prvi_klimatski_tip">prvi klimatski tip</string>
+    <string name="prvi_tip_zemljista">prvi tip zemljista</string>
+    <string name="profil_okusa">profil okusa</string>
+    <string name="jelo_1">jelo 1</string>
+    <string name="jelo_2">jelo 2</string>
+    <string name="jelo_3">jelo 3</string>
+    <string name="tekst_upozorenja">tekst upozorenja</string>
+    <string name="korist_1">korist 1</string>
+    <string name="korist_2">korist 2</string>
+    <string name="korist_3">korist 3</string>
+    <string name="nova_biljka">Nova biljka</string>
+    <string name="naziv">Naziv</string>
+    <string name="pporodica">Porodica</string>
+    <string name="medicinsko_upozorenje">Medicinsko upozorenje</string>
+    <string name="jelo">Jelo</string>
+    <string name="medicinske_koristi">Medicinske koristi</string>
+    <string name="klimatski_tipovi">Klimatski tipovi</string>
+    <string name="zemljisni_tipovi">Zemljišni tipovi</string>
+    <string name="profil_okusaa">Profil okusa</string>
+    <string name="jela">Jela</string>
+    <string name="dodaj_jelo">Dodaj jelo</string>
+    <string name="dodaj_biljku">Dodaj biljku</string>
+    <string name="uslikaj_biljku">Uslikaj biljku</string>
+
+    <string-array name="spinner_elements">
+        <item>Medicinski</item>
+        <item>Kuharski</item>
+        <item>Botanički</item>
+    </string-array>
+</resources>
