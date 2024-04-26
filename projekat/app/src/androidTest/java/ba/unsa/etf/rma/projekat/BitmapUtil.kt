@@ -2,6 +2,8 @@ package ba.unsa.etf.rma.projekat
 
 import android.graphics.Bitmap
 
+//preuzeto iz laboratorijske vjezbe 4
+
 class BitmapUtil {
     companion object {
         fun pixelDiff(rgb1: Int, rgb2: Int): Int {

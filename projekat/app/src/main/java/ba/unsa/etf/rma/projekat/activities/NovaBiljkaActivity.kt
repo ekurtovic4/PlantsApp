@@ -253,12 +253,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
                 nestedScrollView.smoothScrollTo(0, medicinskoUpozorenjeET.top)
             returnValue = false
         }
-        if(jeloET.text.isNotEmpty() && jeloET.text.length !in 2..20){
-            jeloET.setError("Dužina mora biti između 2 i 20 karaktera")
-            if(returnValue)
-                nestedScrollView.smoothScrollTo(0, jeloET.top)
-            returnValue = false
-        }
         if(jela.isEmpty()){
             jeloET.setError("Nije dodano nijedno jelo u listu")
             if(returnValue)
@@ -272,6 +266,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             (0 until zemljisniTipLV.count).count { zemljisniTipLV.isItemChecked(it) } < 1 ||
             profilOkusaLV.checkedItemPosition == ListView.INVALID_POSITION){
             dodajBiljkuBtn.setError("Nije selektovan item u listi/ama")
+            Toast.makeText(this, "Nije selektovan item u listi/ama", Toast.LENGTH_LONG).show()
             returnValue = false
         }
 

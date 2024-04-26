@@ -10,6 +10,8 @@ import androidx.core.graphics.scale
 import org.hamcrest.Description
 import org.hamcrest.TypeSafeMatcher
 
+//preuzeto iz laboratorijske vjezbe 4
+
 fun withImage(@DrawableRes id: Int) = object : TypeSafeMatcher<View>() {
     override fun describeTo(description: Description) {
         description.appendText("Drawable does not contain image with id: $id")

@@ -21,6 +21,7 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
 import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import ba.unsa.etf.rma.projekat.activities.MainActivity
 import ba.unsa.etf.rma.projekat.activities.NovaBiljkaActivity
 import org.hamcrest.Matchers.hasToString
 import org.junit.Test
@@ -81,6 +82,19 @@ class InstrumentedTestsS2 {
 
         onView(withId(R.id.jeloET)).perform(scrollTo())
         onView(withId(R.id.jeloET)).check(matches(hasErrorText("Jelo već postoji")))
+    }
+
+    @Test
+    fun testDodavanjeJelaETValidacija(){
+        val pokreniNovuBiljku = Intent(ApplicationProvider.getApplicationContext(),NovaBiljkaActivity::class.java)
+        launchActivity<NovaBiljkaActivity>(pokreniNovuBiljku)
+
+        onView(withId(R.id.jeloET)).perform(typeText("x"))
+        onView(withId(R.id.dodajJeloBtn)).perform(scrollTo())
+        onView(withId(R.id.dodajJeloBtn)).perform(click())
+
+        onView(withId(R.id.jeloET)).perform(scrollTo())
+        onView(withId(R.id.jeloET)).check(matches(hasErrorText("Dužina mora biti između 2 i 20 karaktera")))
     }
 
     @Test
@@ -167,6 +181,33 @@ class InstrumentedTestsS2 {
         onView(withId(R.id.dodajBiljkuBtn)).perform(scrollTo())
         onView(withId(R.id.dodajBiljkuBtn)).perform(click())
         onView(withId(R.id.jeloET)).check(matches(hasErrorText("Nije dodano nijedno jelo u listu")))
+    }
+
+    @Test
+    fun testDodavanjeBiljke(){
+        val pokreniMain = Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
+        launchActivity<MainActivity>(pokreniMain)
+
+        onView(withId(R.id.novaBiljkaBtn)).perform(click())
+        onView(withId(R.id.nazivET)).perform(typeText("naziv"))
+        onView(withId(R.id.porodicaET)).perform(typeText("porodica"))
+        onView(withId(R.id.medicinskoUpozorenjeET)).perform(typeText("upozorenje"))
+        onView(withId(R.id.jeloET)).perform(typeText("jelo"))
+
+        onView(withId(R.id.medicinskaKoristLV)).perform(scrollTo())
+        onData(hasToString("Regulacija probave")).inAdapterView(withId(R.id.medicinskaKoristLV)).perform(click())
+        onView(withId(R.id.klimatskiTipLV)).perform(scrollTo())
+        onData(hasToString("Mediteranska klima - suha, topla ljeta i blage zime")).inAdapterView(withId(R.id.klimatskiTipLV)).perform(click())
+        onView(withId(R.id.zemljisniTipLV)).perform(scrollTo())
+        onData(hasToString("Crnica")).inAdapterView(withId(R.id.zemljisniTipLV)).perform(click())
+        onView(withId(R.id.profilOkusaLV)).perform(scrollTo())
+        onData(hasToString("Sladak okus")).inAdapterView(withId(R.id.profilOkusaLV)).perform(click())
+
+        onView(withId(R.id.dodajJeloBtn)).perform(scrollTo())
+        onView(withId(R.id.dodajJeloBtn)).perform(click())
+        onView(withId(R.id.dodajBiljkuBtn)).perform(click())
+
+        onView(withId(R.id.biljkeRV)).check(hasItemCount(13))
     }
 
     @Test
