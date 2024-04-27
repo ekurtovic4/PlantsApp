@@ -266,7 +266,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             (0 until zemljisniTipLV.count).count { zemljisniTipLV.isItemChecked(it) } < 1 ||
             profilOkusaLV.checkedItemPosition == ListView.INVALID_POSITION){
             dodajBiljkuBtn.setError("Nije selektovan item u listi/ama")
-            Toast.makeText(this, "Nije selektovan item u listi/ama", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Nije selektovan item u listi/ama", Toast.LENGTH_SHORT).show()
             returnValue = false
         }
 

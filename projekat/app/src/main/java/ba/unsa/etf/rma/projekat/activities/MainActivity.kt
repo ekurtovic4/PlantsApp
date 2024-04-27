@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
             if (receivedObject != null) {
                 plantsList.add(receivedObject)
                 tempPlantsList = plantsList
-                showMedical()
+                mod.setSelection(0)
             }
         }
     }
