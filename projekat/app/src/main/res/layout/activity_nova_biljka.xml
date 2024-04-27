@@ -17,28 +17,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/naziv" />
+            android:hint="@string/naziv"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/porodicaET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/pporodica" />
+            android:hint="@string/pporodica"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/medicinskoUpozorenjeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/medicinsko_upozorenje" />
+            android:hint="@string/medicinsko_upozorenje"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/jeloET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:hint="@string/jelo" />
+            android:hint="@string/jelo"
+            android:inputType="text"/>
 
         <TextView
             android:id="@+id/medicinskaKoristTxt"
@@ -121,13 +125,15 @@
             android:layout_height="200dp"
             android:layout_marginBottom="15dp"
             android:layout_gravity="center"
-            android:src="@drawable/picture1" />
+            android:src="@drawable/picture1"
+            android:contentDescription="@string/slika_biljke" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            style="?android:attr/buttonBarStyle">
 
             <Button
                 android:id="@+id/dodajJeloBtn"
@@ -135,32 +141,35 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginEnd="3dp"
                 android:backgroundTint="#203618"
                 android:textColor="@android:color/white"
-                android:text="@string/dodaj_jelo" />
+                android:text="@string/dodaj_jelo"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/dodajBiljkuBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:backgroundTint="#203618"
                 android:textColor="@android:color/white"
-                android:text="@string/dodaj_biljku" />
+                android:text="@string/dodaj_biljku"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/uslikajBiljkuBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="3dp"
                 android:layout_marginEnd="10dp"
                 android:backgroundTint="#203618"
                 android:textColor="@android:color/white"
-                android:text="@string/uslikaj_biljku" />
+                android:text="@string/uslikaj_biljku"
+                style="?android:attr/buttonBarButtonStyle" />
 
         </LinearLayout>
 

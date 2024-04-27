@@ -26,6 +26,7 @@
     <string name="dodaj_jelo">Dodaj jelo</string>
     <string name="dodaj_biljku">Dodaj biljku</string>
     <string name="uslikaj_biljku">Uslikaj biljku</string>
+    <string name="slika_biljke">slika biljke</string>
 
     <string-array name="spinner_elements">
         <item>Medicinski</item>
