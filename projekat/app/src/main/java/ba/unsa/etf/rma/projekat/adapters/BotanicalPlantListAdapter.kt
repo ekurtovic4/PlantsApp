@@ -9,6 +9,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
+import ba.unsa.etf.rma.projekat.web.TrefleDAO
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class BotanicalPlantListAdapter(
     private var biljke: List<Biljka>,
@@ -20,24 +26,41 @@ class BotanicalPlantListAdapter(
             .inflate(R.layout.botanical_item, parent, false)
         return BotanicalPlantViewHolder(view)
     }
+
     override fun getItemCount(): Int = biljke.size
+
     override fun onBindViewHolder(holder: BotanicalPlantViewHolder, position: Int) {
         val biljka = biljke[position]
         holder.naziv.text = biljka.naziv
         holder.porodica.text = biljka.porodica
-        holder.klima.text = biljka.klimatskiTipovi[0].opis
-        holder.zemljiste.text = biljka.zemljisniTipovi[0].naziv
+
+        if(biljka.klimatskiTipovi.isNotEmpty())
+            holder.klima.text = biljka.klimatskiTipovi[0].opis
+        else holder.klima.text = ""
+
+        if(biljka.zemljisniTipovi.isNotEmpty())
+            holder.zemljiste.text = biljka.zemljisniTipovi[0].naziv
+        else holder.zemljiste.text = ""
 
         val context: Context = holder.slika.context
-        val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
-        holder.slika.setImageResource(id)
+        val trefle = TrefleDAO(context)
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+            Glide.with(context)
+                .load(trefle.getImage(biljka))
+                .centerCrop()
+                .placeholder(R.drawable.picture1)
+                .into(holder.slika)
+        }
 
         holder.itemView.setOnClickListener{ onItemClicked(biljke[position]) }
     }
+
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
         notifyDataSetChanged()
     }
+
     inner class BotanicalPlantViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val slika: ImageView = itemView.findViewById(R.id.slikaItem)
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)

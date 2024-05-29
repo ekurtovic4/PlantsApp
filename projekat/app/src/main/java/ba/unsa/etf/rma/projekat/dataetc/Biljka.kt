@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.projekat.dataetc
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 data class Biljka(
     val naziv: String,
@@ -48,5 +49,11 @@ data class Biljka(
         override fun newArray(size: Int): Array<Biljka?> {
             return arrayOfNulls(size)
         }
+    }
+
+    fun getLatinName(): String{
+        val startIndex = naziv.indexOf('(')
+        val endIndex = naziv.indexOf(')')
+        return naziv.substring(startIndex + 1, endIndex)
     }
 }

@@ -7,8 +7,10 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.R
@@ -17,6 +19,8 @@ import ba.unsa.etf.rma.projekat.adapters.CulinaryPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.MedicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.dataetc.getBiljke
+import ba.unsa.etf.rma.projekat.web.TrefleDAO
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var plants: RecyclerView
@@ -28,6 +32,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mod: Spinner
     private lateinit var resetBtn: Button
     private lateinit var novaBiljkaBtn: Button
+    private lateinit var pretragaET: EditText
+    private lateinit var bojaSPIN: Spinner
+    private lateinit var brzaPretraga: Button
+
+    private var trefleDAO = TrefleDAO(this)
+    private var brzaPretragaMod = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,15 +68,49 @@ class MainActivity : AppCompatActivity() {
             mod.adapter = adapter
         }
 
+        val height = plants.layoutParams.height
         mod.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val text: String = mod.selectedItem.toString()
                 when (text) {
-                    "Medicinski" -> showMedical()
-                    "Kuharski" -> showCulinary()
-                    "Botanički" -> showBotanical()
+                    "Medicinski" -> {
+                        val parameters = plants.layoutParams
+                        parameters.height = height
+                        plants.requestLayout()
+
+                        pretragaET.visibility = View.GONE
+                        bojaSPIN.visibility = View.GONE
+                        brzaPretraga.visibility = View.GONE
+
+                        if(brzaPretragaMod)
+                            tempPlantsList = plantsList
+                        showMedical()
+                    }
+                    "Kuharski" -> {
+                        val parameters = plants.layoutParams
+                        parameters.height = height
+                        plants.requestLayout()
+
+                        pretragaET.visibility = View.GONE
+                        bojaSPIN.visibility = View.GONE
+                        brzaPretraga.visibility = View.GONE
+
+                        if(brzaPretragaMod)
+                            tempPlantsList = plantsList
+                        showCulinary()
+                    }
+                    "Botanički" -> {
+                        val parameters = plants.layoutParams
+                        parameters.height = height - (pretragaET.layoutParams.height + bojaSPIN.layoutParams.height) * 2
+                        plants.requestLayout()
+
+                        pretragaET.visibility = View.VISIBLE
+                        bojaSPIN.visibility = View.VISIBLE
+                        brzaPretraga.visibility = View.VISIBLE
+                        showBotanical()
+                    }
                 }
             }
         }
@@ -78,6 +122,8 @@ class MainActivity : AppCompatActivity() {
             medicalAdapter.updatePlants(tempPlantsList)
             culinaryAdapter.updatePlants(tempPlantsList)
             botanicalAdapter.updatePlants(tempPlantsList)
+            pretragaET.setText("")
+            bojaSPIN.setSelection(0)
         }
 
         //nova biljka button
@@ -85,6 +131,36 @@ class MainActivity : AppCompatActivity() {
         novaBiljkaBtn.setOnClickListener {
             val intent = Intent(this, NovaBiljkaActivity::class.java)
             startActivityForResult(intent, REQUEST_CODE)
+        }
+
+        //S3
+        pretragaET = findViewById(R.id.pretragaET)
+        bojaSPIN = findViewById(R.id.bojaSPIN)
+        brzaPretraga = findViewById(R.id.brzaPretraga)
+
+        pretragaET.visibility = View.GONE
+        bojaSPIN.visibility = View.GONE
+        brzaPretraga.visibility = View.GONE
+
+        //boja spinner
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.color_spinner_elements,
+            android.R.layout.simple_spinner_item
+        ).also{ adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            bojaSPIN.adapter = adapter
+        }
+
+        //brza pretraga button
+        brzaPretraga.setOnClickListener {
+            if(pretragaET.text.isNotEmpty()){
+                lifecycleScope.launch{
+                    tempPlantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
+                    botanicalAdapter.updatePlants(tempPlantsList)
+                }
+                brzaPretragaMod = true
+            }
         }
     }
 
@@ -115,6 +191,8 @@ class MainActivity : AppCompatActivity() {
     private fun showBotanical(){
         plants.adapter = botanicalAdapter
         botanicalAdapter.updatePlants(tempPlantsList)
+        pretragaET.setText("")
+        bojaSPIN.setSelection(0)
     }
 
     private fun filterMedical(model: Biljka) {
@@ -138,6 +216,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun filterBotanical(model: Biljka) {
+        if(brzaPretragaMod) return
+
         val newPlantsList: MutableList<Biljka> = mutableListOf()
         for(plant in tempPlantsList){
             if(plant.porodica == model.porodica && plant.zemljisniTipovi.any{it in model.zemljisniTipovi} && plant.klimatskiTipovi.any{it in model.klimatskiTipovi})

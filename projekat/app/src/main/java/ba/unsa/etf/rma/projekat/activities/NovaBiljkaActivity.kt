@@ -18,12 +18,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.lifecycleScope
 import ba.unsa.etf.rma.projekat.R
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.dataetc.KlimatskiTip
 import ba.unsa.etf.rma.projekat.dataetc.MedicinskaKorist
 import ba.unsa.etf.rma.projekat.dataetc.ProfilOkusaBiljke
 import ba.unsa.etf.rma.projekat.dataetc.Zemljiste
+import ba.unsa.etf.rma.projekat.web.TrefleDAO
+import kotlinx.coroutines.launch
 
 class NovaBiljkaActivity : AppCompatActivity() {
     private lateinit var medicinskaKoristLV: ListView
@@ -58,6 +61,8 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private lateinit var zemljisniTipTxt: TextView
     private lateinit var profilOkusaTxt: TextView
     private lateinit var jelaTxt: TextView
+
+    private var trefleDAO = TrefleDAO(this)
 
     override fun onCreate(savedInstanceState : Bundle?){
         super.onCreate(savedInstanceState)
@@ -152,11 +157,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
 
         dodajBiljkuBtn.setOnClickListener {
             if(validate()){
-                val biljka = novaBiljka()
-                val returnIntent = Intent()
-                returnIntent.putExtra("EXTRA_OBJECT", biljka)
-                setResult(Activity.RESULT_OK, returnIntent)
-                finish()
+                lifecycleScope.launch{
+                    val biljka = novaBiljka()
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("EXTRA_OBJECT", biljka)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
             }
         }
     }
@@ -236,8 +243,13 @@ class NovaBiljkaActivity : AppCompatActivity() {
         var returnValue = true
 
         //EditTexts
-        if(nazivET.text.length !in 2..20){
-            nazivET.setError("Dužina mora biti između 2 i 20 karaktera")
+        if(nazivET.text.length !in 2..40){
+            nazivET.setError("Dužina mora biti između 2 i 40 karaktera")
+            nestedScrollView.smoothScrollTo(0, nestedScrollView.top)
+            returnValue = false
+        }
+        if(!Regex("[a-zA-Z .-]+\\s\\([a-zA-Z .-]+\\)").matches(nazivET.text)){
+            nazivET.setError("Format mora biti \"naziv (latinski naziv)\"")
             nestedScrollView.smoothScrollTo(0, nestedScrollView.top)
             returnValue = false
         }
@@ -273,7 +285,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
         return returnValue
     }
 
-    private fun novaBiljka() : Biljka{
+    private suspend fun novaBiljka() : Biljka{
         val medicinskeKoristi: MutableList<MedicinskaKorist> = mutableListOf()
         for (i in 0 until medicinskaKoristLV.count) {
             if (medicinskaKoristLV.isItemChecked(i)) {
@@ -296,7 +308,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
         }
 
-        return Biljka(
+        return trefleDAO.fixData(Biljka(
             naziv = nazivET.text.toString(),
             porodica = porodicaET.text.toString(),
             medicinskoUpozorenje = medicinskoUpozorenjeET.text.toString(),
@@ -305,6 +317,6 @@ class NovaBiljkaActivity : AppCompatActivity() {
             jela = jela.toList(),
             klimatskiTipovi = klimatskiTipovi,
             zemljisniTipovi = zemljisniTipovi
-        )
+        ))
     }
 }

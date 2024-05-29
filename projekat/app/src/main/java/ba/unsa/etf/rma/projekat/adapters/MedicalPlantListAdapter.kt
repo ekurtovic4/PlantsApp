@@ -10,6 +10,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
+import ba.unsa.etf.rma.projekat.web.TrefleDAO
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MedicalPlantListAdapter(
     private var biljke: List<Biljka>,
@@ -21,7 +27,9 @@ class MedicalPlantListAdapter(
             .inflate(R.layout.medical_item, parent, false)
         return MedicalPlantViewHolder(view)
     }
+
     override fun getItemCount(): Int = biljke.size
+
     override fun onBindViewHolder(holder: MedicalPlantViewHolder, position: Int) {
         val biljka = biljke[position]
         holder.naziv.text = biljka.naziv
@@ -31,15 +39,24 @@ class MedicalPlantListAdapter(
         holder.korist3.text = if(biljka.medicinskeKoristi.size > 2) biljka.medicinskeKoristi[2].opis else ""
 
         val context: Context = holder.slika.context
-        val id: Int = context.resources.getIdentifier("picture1", "drawable", context.packageName)
-        holder.slika.setImageResource(id)
+        val trefle = TrefleDAO(context)
+        val scope = CoroutineScope(Job() + Dispatchers.Main)
+        scope.launch{
+            Glide.with(context)
+                .load(trefle.getImage(biljka))
+                .centerCrop()
+                .placeholder(R.drawable.picture1)
+                .into(holder.slika)
+        }
 
         holder.itemView.setOnClickListener{ onItemClicked(biljke[position]) }
     }
+
     fun updatePlants(biljke: List<Biljka>){
         this.biljke = biljke
         notifyDataSetChanged()
     }
+
     inner class MedicalPlantViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val slika: ImageView = itemView.findViewById(R.id.slikaItem)
         val naziv: TextView = itemView.findViewById(R.id.nazivItem)

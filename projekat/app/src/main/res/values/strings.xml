@@ -27,10 +27,21 @@
     <string name="dodaj_biljku">Dodaj biljku</string>
     <string name="uslikaj_biljku">Uslikaj biljku</string>
     <string name="slika_biljke">slika biljke</string>
+    <string name="brza_pretraga">Brza pretraga</string>
 
     <string-array name="spinner_elements">
         <item>Medicinski</item>
         <item>Kuharski</item>
         <item>Botanički</item>
+    </string-array>
+
+    <string-array name="color_spinner_elements">
+        <item>red</item>
+        <item>blue</item>
+        <item>yellow</item>
+        <item>orange</item>
+        <item>purple</item>
+        <item>brown</item>
+        <item>green</item>
     </string-array>
 </resources>
