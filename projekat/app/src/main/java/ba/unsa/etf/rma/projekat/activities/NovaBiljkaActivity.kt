@@ -308,7 +308,7 @@ class NovaBiljkaActivity : AppCompatActivity() {
             }
         }
 
-        return trefleDAO.fixData(Biljka(
+        val returnPlant = Biljka(
             naziv = nazivET.text.toString(),
             porodica = porodicaET.text.toString(),
             medicinskoUpozorenje = medicinskoUpozorenjeET.text.toString(),
@@ -317,6 +317,12 @@ class NovaBiljkaActivity : AppCompatActivity() {
             jela = jela.toList(),
             klimatskiTipovi = klimatskiTipovi,
             zemljisniTipovi = zemljisniTipovi
-        ))
+        )
+
+        return try{
+            trefleDAO.fixData(returnPlant)
+        } catch(e: Exception){
+            returnPlant
+        }
     }
 }

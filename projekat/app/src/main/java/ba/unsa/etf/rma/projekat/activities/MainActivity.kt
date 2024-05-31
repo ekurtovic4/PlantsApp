@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -133,11 +134,10 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE)
         }
 
-        //S3
+        //elementi za pretragu
         pretragaET = findViewById(R.id.pretragaET)
         bojaSPIN = findViewById(R.id.bojaSPIN)
         brzaPretraga = findViewById(R.id.brzaPretraga)
-
         pretragaET.visibility = View.GONE
         bojaSPIN.visibility = View.GONE
         brzaPretraga.visibility = View.GONE
@@ -156,10 +156,16 @@ class MainActivity : AppCompatActivity() {
         brzaPretraga.setOnClickListener {
             if(pretragaET.text.isNotEmpty()){
                 lifecycleScope.launch{
-                    tempPlantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
-                    botanicalAdapter.updatePlants(tempPlantsList)
+                    try{
+                        brzaPretragaMod = true
+                        tempPlantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
+                        botanicalAdapter.updatePlants(tempPlantsList)
+                    }
+                    catch(e: Exception){
+                        Toast.makeText(this@MainActivity, "Nije moguce dohvatiti biljke s web servisa", Toast.LENGTH_LONG).show()
+                        brzaPretragaMod = false
+                    }
                 }
-                brzaPretragaMod = true
             }
         }
     }

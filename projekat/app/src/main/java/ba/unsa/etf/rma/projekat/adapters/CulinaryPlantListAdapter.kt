@@ -41,11 +41,20 @@ class CulinaryPlantListAdapter(
         val trefle = TrefleDAO(context)
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
-            Glide.with(context)
-                .load(trefle.getImage(biljka))
-                .centerCrop()
-                .placeholder(R.drawable.picture1)
-                .into(holder.slika)
+            try{
+                Glide.with(context)
+                    .load(trefle.getImage(biljka))
+                    .centerCrop()
+                    .placeholder(R.drawable.picture1)
+                    .into(holder.slika)
+            }
+            catch(e: Exception){
+                Glide.with(context)
+                    .load(R.drawable.picture1)
+                    .centerCrop()
+                    .placeholder(R.drawable.picture1)
+                    .into(holder.slika)
+            }
         }
 
         holder.itemView.setOnClickListener{ onItemClicked(biljke[position]) }
