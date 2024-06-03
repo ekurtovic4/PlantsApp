@@ -12,9 +12,13 @@ import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.net.URL
 
-class TrefleDAO(
-    private val context: Context
-) {
+class TrefleDAO() {
+    private lateinit var context: Context
+
+    fun setContext(context: Context){
+        this.context = context
+    }
+
     suspend fun getImage(plant: Biljka): Bitmap {
         val defaultBitmap: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.picture1)
 

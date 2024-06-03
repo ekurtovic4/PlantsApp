@@ -62,11 +62,14 @@ class NovaBiljkaActivity : AppCompatActivity() {
     private lateinit var profilOkusaTxt: TextView
     private lateinit var jelaTxt: TextView
 
-    private var trefleDAO = TrefleDAO(this)
+    private var trefleDAO = TrefleDAO()
 
     override fun onCreate(savedInstanceState : Bundle?){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_nova_biljka)
+
+        //trefleDAO
+        trefleDAO.setContext(this)
 
         //medicinska korist
         medicinskaKoristLV = findViewById(R.id.medicinskaKoristLV)

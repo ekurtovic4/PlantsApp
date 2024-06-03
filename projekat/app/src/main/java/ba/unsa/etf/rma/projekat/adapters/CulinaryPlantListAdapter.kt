@@ -38,7 +38,8 @@ class CulinaryPlantListAdapter(
         holder.jelo3.text = if(biljka.jela.size > 2) biljka.jela[2] else ""
 
         val context: Context = holder.slika.context
-        val trefle = TrefleDAO(context)
+        val trefle = TrefleDAO()
+        trefle.setContext(context)
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             try{

@@ -43,7 +43,8 @@ class BotanicalPlantListAdapter(
         else holder.zemljiste.text = ""
 
         val context: Context = holder.slika.context
-        val trefle = TrefleDAO(context)
+        val trefle = TrefleDAO()
+        trefle.setContext(context)
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             try{

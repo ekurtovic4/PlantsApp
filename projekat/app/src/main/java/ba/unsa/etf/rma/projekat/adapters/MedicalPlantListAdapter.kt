@@ -39,7 +39,8 @@ class MedicalPlantListAdapter(
         holder.korist3.text = if(biljka.medicinskeKoristi.size > 2) biljka.medicinskeKoristi[2].opis else ""
 
         val context: Context = holder.slika.context
-        val trefle = TrefleDAO(context)
+        val trefle = TrefleDAO()
+        trefle.setContext(context)
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             try{

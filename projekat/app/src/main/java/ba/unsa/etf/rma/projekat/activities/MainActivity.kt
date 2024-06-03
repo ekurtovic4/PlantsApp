@@ -37,12 +37,16 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bojaSPIN: Spinner
     private lateinit var brzaPretraga: Button
 
-    private var trefleDAO = TrefleDAO(this)
+    private var trefleDAO = TrefleDAO()
     private var brzaPretragaMod = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //trefleDAO
+        trefleDAO.setContext(this)
+
         plants = findViewById(R.id.biljkeRV)
         plants.layoutManager = LinearLayoutManager(
             this,
