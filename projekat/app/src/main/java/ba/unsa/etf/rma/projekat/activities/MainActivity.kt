@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch{
                     try{
                         brzaPretragaMod = true
-                        tempPlantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
+                        tempPlantsList = trefleDAO.getPlantswithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
                         botanicalAdapter.updatePlants(tempPlantsList)
                     }
                     catch(e: Exception){

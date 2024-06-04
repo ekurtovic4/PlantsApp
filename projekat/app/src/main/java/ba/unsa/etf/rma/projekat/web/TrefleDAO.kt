@@ -104,16 +104,16 @@ class TrefleDAO() {
         var klimatskiTipovi = plant.klimatskiTipovi
         val light = plantData.growth.light
         val atmosphericHumidity = plantData.growth.atmosphericHumidity
+
         if(light != null && atmosphericHumidity != null){
-            klimatskiTipovi = when {
-                light in 6..9 && atmosphericHumidity in 1..5 -> listOf(KlimatskiTip.SREDOZEMNA)
-                light in 8..10 && atmosphericHumidity in 7..10 -> listOf(KlimatskiTip.TROPSKA)
-                light in 6..9 && atmosphericHumidity in 5..8 -> listOf(KlimatskiTip.SUBTROPSKA)
-                light in 4..7 && atmosphericHumidity in 3..7 -> listOf(KlimatskiTip.UMJERENA)
-                light in 7..9 && atmosphericHumidity in 1..2 -> listOf(KlimatskiTip.SUHA)
-                light in 0..5 && atmosphericHumidity in 3..7 -> listOf(KlimatskiTip.PLANINSKA)
-                else -> plant.klimatskiTipovi
-            }
+            klimatskiTipovi = mutableListOf()
+
+            if(light in 6..9 && atmosphericHumidity in 1..5) klimatskiTipovi.add(KlimatskiTip.SREDOZEMNA)
+            if(light in 8..10 && atmosphericHumidity in 7..10) klimatskiTipovi.add(KlimatskiTip.TROPSKA)
+            if(light in 6..9 && atmosphericHumidity in 5..8) klimatskiTipovi.add(KlimatskiTip.SUBTROPSKA)
+            if(light in 4..7 && atmosphericHumidity in 3..7) klimatskiTipovi.add(KlimatskiTip.UMJERENA)
+            if(light in 7..9 && atmosphericHumidity in 1..2) klimatskiTipovi.add(KlimatskiTip.SUHA)
+            if(light in 0..5 && atmosphericHumidity in 3..7) klimatskiTipovi.add(KlimatskiTip.PLANINSKA)
         }
 
         return Biljka(
@@ -128,7 +128,7 @@ class TrefleDAO() {
             )
     }
 
-    suspend fun getPlantsWithFlowerColor(flowerColor:String, substr:String): List<Biljka>{
+    suspend fun getPlantswithFlowerColor(flowerColor:String, substr:String): List<Biljka>{
         val result = withContext(Dispatchers.IO){
             PlantRepository.getPlantsByFlowerColor(flowerColor, substr)
         }
@@ -142,9 +142,7 @@ class TrefleDAO() {
     }
 
     private suspend fun onSearchSuccess(plantData: List<ShortPlantData>, substr: String): List<Biljka>{
-        val newPlantData = plantData.filter { it.scientificName.contains(substr, ignoreCase = true) }
-
-        val returnList = newPlantData.map { plant -> fixData(Biljka(
+        val returnList = plantData.map { plant -> fixData(Biljka(
             naziv = (plant.name ?: "") + " (" + plant.scientificName + ")",
             porodica = "",
             medicinskoUpozorenje = "",
