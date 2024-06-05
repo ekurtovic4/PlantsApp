@@ -128,30 +128,30 @@ class TrefleDAO() {
             )
     }
 
-    suspend fun getPlantswithFlowerColor(flowerColor:String, substr:String): List<Biljka>{
+    suspend fun getPlantsWithFlowerColor(flowerColor:String, substr:String): List<Biljka>{
         val result = withContext(Dispatchers.IO){
             PlantRepository.getPlantsByFlowerColor(flowerColor, substr)
         }
 
         return when(result){
             is GetByFlowerColorResponse -> withContext(Dispatchers.IO){
-                onSearchSuccess(result.data, substr)
+                onSearchSuccess(result.data)
             }
             else -> listOf()
         }
     }
 
-    private suspend fun onSearchSuccess(plantData: List<ShortPlantData>, substr: String): List<Biljka>{
-        val returnList = plantData.map { plant -> fixData(Biljka(
+    private fun onSearchSuccess(plantData: List<ShortPlantData>): List<Biljka>{
+        val returnList = plantData.map { plant -> Biljka(
             naziv = (plant.name ?: "") + " (" + plant.scientificName + ")",
-            porodica = "",
+            porodica = plant.family ?: "",
             medicinskoUpozorenje = "",
             medicinskeKoristi = listOf(),
             profilOkusa = null,
             jela = listOf(),
             klimatskiTipovi = listOf(),
             zemljisniTipovi = listOf()
-        )) }.toMutableList()
+        ) }.toMutableList()
 
         return returnList
     }
