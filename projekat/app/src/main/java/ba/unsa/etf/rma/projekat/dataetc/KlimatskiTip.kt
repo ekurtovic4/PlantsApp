@@ -31,7 +31,11 @@ enum class KlimatskiTip(val opis: String?) : Parcelable {
         }
 
         fun fromString(value: String): KlimatskiTip? {
-            return KlimatskiTip.entries.find { it.opis == value }
+            return entries.find { it.opis == value }
+        }
+
+        fun valFromString(value: String): KlimatskiTip? {
+            return entries.find { it.toString() == value.uppercase() }
         }
     }
 }

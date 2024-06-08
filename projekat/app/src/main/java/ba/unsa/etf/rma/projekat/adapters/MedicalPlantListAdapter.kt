@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
+import ba.unsa.etf.rma.projekat.dataetc.BiljkaDatabase
 import ba.unsa.etf.rma.projekat.web.TrefleDAO
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
@@ -44,11 +45,15 @@ class MedicalPlantListAdapter(
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             try{
+                val imgBitmap = trefle.getImage(biljka)
                 Glide.with(context)
-                    .load(trefle.getImage(biljka))
+                    .load(imgBitmap)
                     .centerCrop()
                     .placeholder(R.drawable.picture1)
                     .into(holder.slika)
+
+                val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
+                biljkaDao.addImage(biljka.id, imgBitmap)
             }
             catch(e: Exception){
                 Glide.with(context)

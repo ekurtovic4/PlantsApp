@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.projekat.dataetc
 
 import android.os.Parcel
 import android.os.Parcelable
+import java.util.Locale
 
 enum class MedicinskaKorist(val opis: String?) : Parcelable{
     SMIRENJE("Smirenje - za smirenje i relaksaciju"),
@@ -32,6 +33,10 @@ enum class MedicinskaKorist(val opis: String?) : Parcelable{
 
         fun fromString(value: String): MedicinskaKorist? {
             return entries.find { it.opis == value }
+        }
+
+        fun valFromString(value: String): MedicinskaKorist? {
+            return entries.find { it.toString() == value.uppercase() }
         }
     }
 }

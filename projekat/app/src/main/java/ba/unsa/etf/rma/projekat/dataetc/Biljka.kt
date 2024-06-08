@@ -2,19 +2,26 @@ package ba.unsa.etf.rma.projekat.dataetc
 
 import android.os.Parcel
 import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class Biljka(
-    val naziv: String,
-    val porodica: String,
-    val medicinskoUpozorenje: String,
-    val medicinskeKoristi: List<MedicinskaKorist>,
-    val profilOkusa: ProfilOkusaBiljke?,
-    val jela: List<String>,
-    val klimatskiTipovi: List<KlimatskiTip>,
-    val zemljisniTipovi: List<Zemljiste>
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @ColumnInfo(name = "naziv") val naziv: String,
+    @ColumnInfo(name = "porodica") val porodica: String,
+    @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
+    @ColumnInfo(name = "medicinskeKoristi") val medicinskeKoristi: List<MedicinskaKorist>,
+    @ColumnInfo(name = "profilOkusa") val profilOkusa: ProfilOkusaBiljke?,
+    @ColumnInfo(name = "jela") val jela: List<String>,
+    @ColumnInfo(name = "klimatskiTipovi") val klimatskiTipovi: List<KlimatskiTip>,
+    @ColumnInfo(name = "zemljisniTipovi") val zemljisniTipovi: List<Zemljiste>,
+    @ColumnInfo(name = "onlineChecked") val onlineChecked: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readInt(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -22,7 +29,8 @@ data class Biljka(
         parcel.readParcelable(ProfilOkusaBiljke::class.java.classLoader),
         parcel.createStringArrayList() as List<String>,
         parcel.createTypedArrayList(KlimatskiTip) as List<KlimatskiTip>,
-        parcel.createTypedArrayList(Zemljiste) as List<Zemljiste>
+        parcel.createTypedArrayList(Zemljiste) as List<Zemljiste>,
+        parcel.readBoolean()
     ) {
     }
 
@@ -31,6 +39,7 @@ data class Biljka(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeInt(id)
         dest.writeString(naziv)
         dest.writeString(porodica)
         dest.writeString(medicinskoUpozorenje)
@@ -39,6 +48,7 @@ data class Biljka(
         dest.writeStringList(jela)
         dest.writeTypedList(klimatskiTipovi)
         dest.writeTypedList(zemljisniTipovi)
+        dest.writeBoolean(onlineChecked)
     }
 
     companion object CREATOR : Parcelable.Creator<Biljka> {
@@ -55,5 +65,25 @@ data class Biljka(
         val startIndex = naziv.indexOf('(')
         val endIndex = naziv.indexOf(')')
         return naziv.substring(startIndex + 1, endIndex)
+    }
+
+    fun isEqualToFixed(fixedBiljka: Biljka): Boolean{
+        return porodica == fixedBiljka.porodica
+                && medicinskoUpozorenje == fixedBiljka.medicinskoUpozorenje
+                && jela == fixedBiljka.jela
+                && klimatskiTipovi == fixedBiljka.klimatskiTipovi
+                && zemljisniTipovi == fixedBiljka.zemljisniTipovi
+    }
+
+    fun isEqualWithoutId(biljka: Biljka): Boolean{
+        return naziv == biljka.naziv
+                && porodica == biljka.porodica
+                && medicinskoUpozorenje == biljka.medicinskoUpozorenje
+                && medicinskeKoristi == biljka.medicinskeKoristi
+                && profilOkusa == biljka.profilOkusa
+                && jela == biljka.jela
+                && klimatskiTipovi == biljka.klimatskiTipovi
+                && zemljisniTipovi == biljka.zemljisniTipovi
+                && onlineChecked == biljka.onlineChecked
     }
 }

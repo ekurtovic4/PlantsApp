@@ -117,6 +117,7 @@ class TrefleDAO() {
         }
 
         return Biljka(
+            id = plant.id,
             naziv = plant.naziv,
             porodica = plantData.family ?: plant.porodica,
             medicinskoUpozorenje = medicinskoUpozorenje,
@@ -124,7 +125,8 @@ class TrefleDAO() {
             profilOkusa = plant.profilOkusa,
             jela = if(!plantData.edible) listOf() else plant.jela,
             klimatskiTipovi = klimatskiTipovi,
-            zemljisniTipovi = zemljisniTipovi
+            zemljisniTipovi = zemljisniTipovi,
+            onlineChecked = true
             )
     }
 

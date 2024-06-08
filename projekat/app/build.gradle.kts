@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-kapt")
 }
 
 android {
@@ -68,4 +69,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation ("org.assertj:assertj-core:3.22.0")
+    implementation("androidx.room:room-runtime:+")
+    annotationProcessor("androidx.room:room-compiler:+")
+    implementation("androidx.room:room-ktx:+")
+    kapt("androidx.room:room-compiler:+")
 }

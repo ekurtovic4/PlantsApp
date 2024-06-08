@@ -31,7 +31,11 @@ enum class Zemljiste(val naziv: String?) : Parcelable {
         }
 
         fun fromString(value: String): Zemljiste? {
-            return Zemljiste.entries.find { it.naziv == value }
+            return entries.find { it.naziv == value }
+        }
+
+        fun valFromString(value: String): Zemljiste? {
+            return entries.find { it.toString() == value.uppercase() }
         }
     }
 }

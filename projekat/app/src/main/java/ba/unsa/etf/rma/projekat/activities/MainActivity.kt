@@ -19,6 +19,7 @@ import ba.unsa.etf.rma.projekat.adapters.BotanicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.CulinaryPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.MedicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
+import ba.unsa.etf.rma.projekat.dataetc.BiljkaDatabase
 import ba.unsa.etf.rma.projekat.dataetc.getBiljke
 import ba.unsa.etf.rma.projekat.web.TrefleDAO
 import kotlinx.coroutines.launch
@@ -28,8 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var medicalAdapter: MedicalPlantListAdapter
     private lateinit var culinaryAdapter: CulinaryPlantListAdapter
     private lateinit var botanicalAdapter: BotanicalPlantListAdapter
-    private var plantsList: MutableList<Biljka> = getBiljke().toMutableList()
-    private lateinit var tempPlantsList: MutableList<Biljka>
+    private var plantsList = mutableListOf<Biljka>()
     private lateinit var mod: Spinner
     private lateinit var resetBtn: Button
     private lateinit var novaBiljkaBtn: Button
@@ -40,13 +40,22 @@ class MainActivity : AppCompatActivity() {
     private var trefleDAO = TrefleDAO()
     private var brzaPretragaMod = false
 
+    private lateinit var biljkaDao: BiljkaDatabase.BiljkaDAO
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //database
+        biljkaDao = BiljkaDatabase.getInstance(this).biljkaDao()
+        lifecycleScope.launch{
+            plantsList = biljkaDao.getAllBiljkas().toMutableList()
+        }
+
         //trefleDAO
         trefleDAO.setContext(this)
 
+        //RV i adapteri
         plants = findViewById(R.id.biljkeRV)
         plants.layoutManager = LinearLayoutManager(
             this,
@@ -58,9 +67,8 @@ class MainActivity : AppCompatActivity() {
         culinaryAdapter = CulinaryPlantListAdapter(listOf()) { biljka -> filterCulinary(biljka) }
         botanicalAdapter = BotanicalPlantListAdapter(listOf()) { biljka -> filterBotanical(biljka) }
 
-        tempPlantsList = plantsList
         plants.adapter = medicalAdapter
-        medicalAdapter.updatePlants(tempPlantsList)
+        medicalAdapter.updatePlants(plantsList)
 
         //mod spinner
         mod = findViewById(R.id.modSpinner)
@@ -90,7 +98,9 @@ class MainActivity : AppCompatActivity() {
                         brzaPretraga.visibility = View.GONE
 
                         if(brzaPretragaMod)
-                            tempPlantsList = plantsList
+                            lifecycleScope.launch{
+                                plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                            }
                         showMedical()
                     }
                     "Kuharski" -> {
@@ -103,7 +113,9 @@ class MainActivity : AppCompatActivity() {
                         brzaPretraga.visibility = View.GONE
 
                         if(brzaPretragaMod)
-                            tempPlantsList = plantsList
+                            lifecycleScope.launch{
+                                plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                            }
                         showCulinary()
                     }
                     "Botanički" -> {
@@ -123,12 +135,14 @@ class MainActivity : AppCompatActivity() {
         //reset button
         resetBtn = findViewById(R.id.resetBtn)
         resetBtn.setOnClickListener {
-            tempPlantsList = plantsList
-            medicalAdapter.updatePlants(tempPlantsList)
-            culinaryAdapter.updatePlants(tempPlantsList)
-            botanicalAdapter.updatePlants(tempPlantsList)
-            pretragaET.setText("")
-            bojaSPIN.setSelection(0)
+            lifecycleScope.launch{
+                plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                medicalAdapter.updatePlants(plantsList)
+                culinaryAdapter.updatePlants(plantsList)
+                botanicalAdapter.updatePlants(plantsList)
+                pretragaET.setText("")
+                bojaSPIN.setSelection(0)
+            }
         }
 
         //nova biljka button
@@ -162,8 +176,8 @@ class MainActivity : AppCompatActivity() {
                 lifecycleScope.launch{
                     try{
                         brzaPretragaMod = true
-                        tempPlantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
-                        botanicalAdapter.updatePlants(tempPlantsList)
+                        plantsList = trefleDAO.getPlantsWithFlowerColor(bojaSPIN.selectedItem.toString(), pretragaET.text.toString()).toMutableList()
+                        botanicalAdapter.updatePlants(plantsList)
                     }
                     catch(e: Exception){
                         Toast.makeText(this@MainActivity, "Nije moguce dohvatiti biljke s web servisa", Toast.LENGTH_LONG).show()
@@ -180,61 +194,63 @@ class MainActivity : AppCompatActivity() {
             val receivedObject = data?.getParcelableExtra<Biljka>("EXTRA_OBJECT")
 
             if (receivedObject != null) {
-                plantsList.add(receivedObject)
-                tempPlantsList = plantsList
-                mod.setSelection(0)
-                showMedical()
+                lifecycleScope.launch{
+                    biljkaDao.saveBiljka(receivedObject)
+                    plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                    mod.setSelection(0)
+                    showMedical()
+                }
             }
         }
     }
 
     private fun showMedical(){
         plants.adapter = medicalAdapter
-        medicalAdapter.updatePlants(tempPlantsList)
+        medicalAdapter.updatePlants(plantsList)
     }
 
     private fun showCulinary(){
         plants.adapter = culinaryAdapter
-        culinaryAdapter.updatePlants(tempPlantsList)
+        culinaryAdapter.updatePlants(plantsList)
     }
 
     private fun showBotanical(){
         plants.adapter = botanicalAdapter
-        botanicalAdapter.updatePlants(tempPlantsList)
+        botanicalAdapter.updatePlants(plantsList)
         pretragaET.setText("")
         bojaSPIN.setSelection(0)
     }
 
     private fun filterMedical(model: Biljka) {
         val newPlantsList: MutableList<Biljka> = mutableListOf()
-        for(plant in tempPlantsList){
+        for(plant in plantsList){
             if(plant.medicinskeKoristi.any{ model.medicinskeKoristi.contains(it) })
                 newPlantsList.add(plant)
         }
-        tempPlantsList = newPlantsList
-        medicalAdapter.updatePlants(tempPlantsList)
+        plantsList = newPlantsList
+        medicalAdapter.updatePlants(plantsList)
     }
 
     private fun filterCulinary(model: Biljka) {
         val newPlantsList: MutableList<Biljka> = mutableListOf()
-        for(plant in tempPlantsList){
+        for(plant in plantsList){
             if(plant.profilOkusa == model.profilOkusa || plant.jela.any{it in model.jela})
                 newPlantsList.add(plant)
         }
-        tempPlantsList = newPlantsList
-        culinaryAdapter.updatePlants(tempPlantsList)
+        plantsList = newPlantsList
+        culinaryAdapter.updatePlants(plantsList)
     }
 
     private fun filterBotanical(model: Biljka) {
         if(brzaPretragaMod) return
 
         val newPlantsList: MutableList<Biljka> = mutableListOf()
-        for(plant in tempPlantsList){
+        for(plant in plantsList){
             if(plant.porodica == model.porodica && plant.zemljisniTipovi.any{it in model.zemljisniTipovi} && plant.klimatskiTipovi.any{it in model.klimatskiTipovi})
                 newPlantsList.add(plant)
         }
-        tempPlantsList = newPlantsList
-        botanicalAdapter.updatePlants(tempPlantsList)
+        plantsList = newPlantsList
+        botanicalAdapter.updatePlants(plantsList)
     }
 
     companion object {
