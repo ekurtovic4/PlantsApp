@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         //database
         biljkaDao = BiljkaDatabase.getInstance(this).biljkaDao()
+
         lifecycleScope.launch{
             plantsList = biljkaDao.getAllBiljkas().toMutableList()
         }

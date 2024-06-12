@@ -12,6 +12,7 @@ import androidx.room.PrimaryKey
     onDelete = ForeignKey.CASCADE)]
 )
 data class BiljkaBitmap (
-    @PrimaryKey val idBiljke: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    @ColumnInfo(name = "idBiljke") val idBiljke: Long,
     @ColumnInfo(name = "bitmap") val bitmap: Bitmap
 )

@@ -9,9 +9,9 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Biljka(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "naziv") val naziv: String,
-    @ColumnInfo(name = "porodica") val porodica: String,
+    @ColumnInfo(name = "family") val porodica: String,
     @ColumnInfo(name = "medicinskoUpozorenje") val medicinskoUpozorenje: String,
     @ColumnInfo(name = "medicinskeKoristi") val medicinskeKoristi: List<MedicinskaKorist>,
     @ColumnInfo(name = "profilOkusa") val profilOkusa: ProfilOkusaBiljke?,
@@ -21,7 +21,7 @@ data class Biljka(
     @ColumnInfo(name = "onlineChecked") val onlineChecked: Boolean = false
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readInt(),
+        parcel.readLong(),
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
@@ -39,7 +39,7 @@ data class Biljka(
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeInt(id)
+        dest.writeLong(id ?: -1L)
         dest.writeString(naziv)
         dest.writeString(porodica)
         dest.writeString(medicinskoUpozorenje)
@@ -53,7 +53,18 @@ data class Biljka(
 
     companion object CREATOR : Parcelable.Creator<Biljka> {
         override fun createFromParcel(parcel: Parcel): Biljka {
-            return Biljka(parcel)
+            return Biljka(
+                parcel.readLong().takeIf { it > 0 },
+                parcel.readString().toString(),
+                parcel.readString().toString(),
+                parcel.readString().toString(),
+                parcel.createTypedArrayList(MedicinskaKorist) ?: ArrayList(),
+                parcel.readParcelable(ProfilOkusaBiljke::class.java.classLoader),
+                parcel.createStringArrayList() ?: ArrayList(),
+                parcel.createTypedArrayList(KlimatskiTip) ?: ArrayList(),
+                parcel.createTypedArrayList(Zemljiste) ?: ArrayList(),
+                parcel.readBoolean()
+            )
         }
 
         override fun newArray(size: Int): Array<Biljka?> {

@@ -1,6 +1,9 @@
 package ba.unsa.etf.rma.projekat.adapters
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.URL
 
 class CulinaryPlantListAdapter(
     private var biljke: List<Biljka>,
@@ -43,23 +48,36 @@ class CulinaryPlantListAdapter(
         trefle.setContext(context)
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
-            try{
-                val imgBitmap = trefle.getImage(biljka)
-                Glide.with(context)
-                    .load(imgBitmap)
-                    .centerCrop()
-                    .placeholder(R.drawable.picture1)
-                    .into(holder.slika)
+            val activity = (holder.itemView.context as? Activity)
+            if (activity != null && !activity.isFinishing){
+                try{
+                    val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
+                    val dbBitmap = biljka.id?.let { biljkaDao.getBitmapByIdBiljke(it) }
+                    val imgBitmap: Bitmap?
 
-                val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
-                biljkaDao.addImage(biljka.id, imgBitmap)
-            }
-            catch(e: Exception){
-                Glide.with(context)
-                    .load(R.drawable.picture1)
-                    .centerCrop()
-                    .placeholder(R.drawable.picture1)
-                    .into(holder.slika)
+                    if(dbBitmap?.isEmpty() == true){
+                        imgBitmap = trefle.getImage(biljka)
+                        val resizedImgBitmap: Bitmap =
+                            Bitmap.createBitmap(imgBitmap, 0, 0, 400, 400)
+                        biljka.id.let { biljkaDao.addImage(it, resizedImgBitmap) }
+                    }
+                    else{
+                        imgBitmap = dbBitmap?.get(0)?.bitmap
+                    }
+
+                    Glide.with(context)
+                        .load(imgBitmap)
+                        .centerCrop()
+                        .placeholder(R.drawable.picture1)
+                        .into(holder.slika)
+                }
+                catch(e: Exception){
+                    Glide.with(context)
+                        .load(R.drawable.picture1)
+                        .centerCrop()
+                        .placeholder(R.drawable.picture1)
+                        .into(holder.slika)
+                }
             }
         }
 

@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.projekat.dataetc
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.room.TypeConverter
 import java.io.ByteArrayOutputStream
 
@@ -47,14 +48,16 @@ class Converters {
     }
 
     @TypeConverter
-    fun fromBitmap(bitmap: Bitmap): ByteArray {
+    fun fromBitmap(bitmap: Bitmap): String {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        return outputStream.toByteArray()
+        val byteArray = outputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
     }
 
     @TypeConverter
-    fun toBitmap(byteArray: ByteArray): Bitmap {
+    fun toBitmap(encodedString: String): Bitmap {
+        val byteArray = Base64.decode(encodedString, Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
 }
