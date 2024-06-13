@@ -58,11 +58,11 @@ class BotanicalPlantListAdapter(
                     val dbBitmap = biljka.id?.let { biljkaDao.getBitmapByIdBiljke(it) }
                     val imgBitmap: Bitmap?
 
-                    if(dbBitmap?.isEmpty() == true){
+                    if(dbBitmap?.isEmpty() == true || biljka.id == null){
                         imgBitmap = trefle.getImage(biljka)
                         val resizedImgBitmap: Bitmap =
                             Bitmap.createBitmap(imgBitmap, 0, 0, 400, 400)
-                        biljka.id.let { biljkaDao.addImage(it, resizedImgBitmap) }
+                        biljka.id?.let { biljkaDao.addImage(it, resizedImgBitmap) }
                     }
                     else{
                         imgBitmap = dbBitmap?.get(0)?.bitmap
