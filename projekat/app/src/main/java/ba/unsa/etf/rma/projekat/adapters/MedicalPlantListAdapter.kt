@@ -56,7 +56,7 @@ class MedicalPlantListAdapter(
                     if(dbBitmap?.isEmpty() == true){
                         imgBitmap = trefle.getImage(biljka)
                         val resizedImgBitmap: Bitmap =
-                            Bitmap.createBitmap(imgBitmap, 0, 0, 400, 400)
+                            Bitmap.createScaledBitmap(imgBitmap, 400, 400, true)
                         biljka.id.let { biljkaDao.addImage(it, resizedImgBitmap) }
                     }
                     else{

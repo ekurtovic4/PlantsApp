@@ -49,10 +49,6 @@ class MainActivity : AppCompatActivity() {
         //database
         biljkaDao = BiljkaDatabase.getInstance(this).biljkaDao()
 
-        lifecycleScope.launch{
-            plantsList = biljkaDao.getAllBiljkas().toMutableList()
-        }
-
         //trefleDAO
         trefleDAO.setContext(this)
 
@@ -69,7 +65,11 @@ class MainActivity : AppCompatActivity() {
         botanicalAdapter = BotanicalPlantListAdapter(listOf()) { biljka -> filterBotanical(biljka) }
 
         plants.adapter = medicalAdapter
-        medicalAdapter.updatePlants(plantsList)
+
+        lifecycleScope.launch{
+            plantsList = biljkaDao.getAllBiljkas().toMutableList()
+            medicalAdapter.updatePlants(plantsList)
+        }
 
         //mod spinner
         mod = findViewById(R.id.modSpinner)
@@ -101,8 +101,11 @@ class MainActivity : AppCompatActivity() {
                         if(brzaPretragaMod)
                             lifecycleScope.launch{
                                 plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                                showMedical()
                             }
-                        showMedical()
+                        else{
+                            showMedical()
+                        }
                     }
                     "Kuharski" -> {
                         val parameters = plants.layoutParams
@@ -116,8 +119,11 @@ class MainActivity : AppCompatActivity() {
                         if(brzaPretragaMod)
                             lifecycleScope.launch{
                                 plantsList = biljkaDao.getAllBiljkas().toMutableList()
+                                showCulinary()
                             }
-                        showCulinary()
+                        else{
+                            showCulinary()
+                        }
                     }
                     "Botanički" -> {
                         val parameters = plants.layoutParams
