@@ -47,7 +47,7 @@ class MedicalPlantListAdapter(
         val scope = CoroutineScope(Job() + Dispatchers.Main)
         scope.launch{
             val activity = (holder.itemView.context as? Activity)
-            if (activity != null && !activity.isFinishing){
+            if (activity != null && !activity.isDestroyed && !activity.isFinishing){
                 try{
                     val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
                     val dbBitmap = biljka.id?.let { biljkaDao.getBitmapByIdBiljke(it) }
@@ -62,19 +62,22 @@ class MedicalPlantListAdapter(
                     else{
                         imgBitmap = dbBitmap?.get(0)?.bitmap
                     }
-
-                    Glide.with(context)
-                        .load(imgBitmap)
-                        .centerCrop()
-                        .placeholder(R.drawable.picture1)
-                        .into(holder.slika)
+                    if (!activity.isDestroyed && !activity.isFinishing){
+                        Glide.with(context)
+                            .load(imgBitmap)
+                            .centerCrop()
+                            .placeholder(R.drawable.picture1)
+                            .into(holder.slika)
+                    }
                 }
                 catch(e: Exception){
-                    Glide.with(context)
-                        .load(R.drawable.picture1)
-                        .centerCrop()
-                        .placeholder(R.drawable.picture1)
-                        .into(holder.slika)
+                    if (!activity.isDestroyed && !activity.isFinishing){
+                        Glide.with(context)
+                            .load(R.drawable.picture1)
+                            .centerCrop()
+                            .placeholder(R.drawable.picture1)
+                            .into(holder.slika)
+                    }
                 }
             }
         }

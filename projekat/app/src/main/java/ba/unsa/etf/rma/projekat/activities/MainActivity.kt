@@ -68,6 +68,10 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch{
             plantsList = biljkaDao.getAllBiljkas().toMutableList()
+            if(plantsList.isEmpty()){
+                biljkaDao.insertAll(getBiljke())
+                plantsList = biljkaDao.getAllBiljkas().toMutableList()
+            }
             medicalAdapter.updatePlants(plantsList)
         }
 
