@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
 import ba.unsa.etf.rma.projekat.R
@@ -24,6 +26,7 @@ import java.net.URL
 
 class CulinaryPlantListAdapter(
     private var biljke: List<Biljka>,
+    private val lifecycleOwner: LifecycleOwner,
     private val onItemClicked: (biljka: Biljka) -> Unit
 ) : RecyclerView.Adapter<CulinaryPlantListAdapter.CulinaryPlantViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CulinaryPlantViewHolder {
@@ -46,41 +49,34 @@ class CulinaryPlantListAdapter(
         val context: Context = holder.slika.context
         val trefle = TrefleDAO()
         trefle.setContext(context)
-        val scope = CoroutineScope(Job() + Dispatchers.Main)
-        scope.launch{
-            val activity = (holder.itemView.context as? Activity)
-            if (activity != null && !activity.isDestroyed && !activity.isFinishing){
-                try{
-                    val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
-                    val dbBitmap = biljka.id?.let { biljkaDao.getBitmapByIdBiljke(it) }
-                    val imgBitmap: Bitmap?
 
-                    if(dbBitmap?.isEmpty() == true){
-                        imgBitmap = trefle.getImage(biljka)
-                        val resizedImgBitmap: Bitmap =
-                            Bitmap.createScaledBitmap(imgBitmap, 400, 400, true)
-                        biljka.id.let { biljkaDao.addImage(it, resizedImgBitmap) }
-                    }
-                    else{
-                        imgBitmap = dbBitmap?.get(0)?.bitmap
-                    }
-                    if (!activity.isDestroyed && !activity.isFinishing){
-                        Glide.with(context)
-                            .load(imgBitmap)
-                            .centerCrop()
-                            .placeholder(R.drawable.picture1)
-                            .into(holder.slika)
-                    }
+        lifecycleOwner.lifecycleScope.launch {
+            try{
+                val biljkaDao = BiljkaDatabase.getInstance(context).biljkaDao()
+                val dbBitmap = biljka.id?.let { biljkaDao.getBitmapByIdBiljke(it) }
+                val imgBitmap: Bitmap?
+
+                if(dbBitmap.isNullOrEmpty()){
+                    imgBitmap = trefle.getImage(biljka)
+                    val resizedImgBitmap: Bitmap =
+                        Bitmap.createScaledBitmap(imgBitmap, 400, 400, true)
+                    biljka.id?.let { biljkaDao.addImage(it, resizedImgBitmap) }
                 }
-                catch(e: Exception){
-                    if (!activity.isDestroyed && !activity.isFinishing){
-                        Glide.with(context)
-                            .load(R.drawable.picture1)
-                            .centerCrop()
-                            .placeholder(R.drawable.picture1)
-                            .into(holder.slika)
-                    }
+                else{
+                    imgBitmap = dbBitmap[0].bitmap
                 }
+                Glide.with(context)
+                    .load(imgBitmap)
+                    .centerCrop()
+                    .placeholder(R.drawable.picture1)
+                    .into(holder.slika)
+            }
+            catch(e: Exception){
+                Glide.with(context)
+                    .load(R.drawable.picture1)
+                    .centerCrop()
+                    .placeholder(R.drawable.picture1)
+                    .into(holder.slika)
             }
         }
 

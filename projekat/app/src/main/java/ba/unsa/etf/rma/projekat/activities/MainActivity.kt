@@ -60,9 +60,9 @@ class MainActivity : AppCompatActivity() {
             false
         )
 
-        medicalAdapter = MedicalPlantListAdapter(listOf()) { biljka -> filterMedical(biljka) }
-        culinaryAdapter = CulinaryPlantListAdapter(listOf()) { biljka -> filterCulinary(biljka) }
-        botanicalAdapter = BotanicalPlantListAdapter(listOf()) { biljka -> filterBotanical(biljka) }
+        medicalAdapter = MedicalPlantListAdapter(listOf(), this) { biljka -> filterMedical(biljka) }
+        culinaryAdapter = CulinaryPlantListAdapter(listOf(), this) { biljka -> filterCulinary(biljka) }
+        botanicalAdapter = BotanicalPlantListAdapter(listOf(), this) { biljka -> filterBotanical(biljka) }
 
         plants.adapter = medicalAdapter
 
