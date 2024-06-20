@@ -63,18 +63,23 @@ class MedicalPlantListAdapter(
                 else{
                     imgBitmap = dbBitmap[0].bitmap
                 }
-                Glide.with(context)
-                    .load(imgBitmap)
-                    .centerCrop()
-                    .placeholder(R.drawable.picture1)
-                    .into(holder.slika)
+
+                if(!(lifecycleOwner as Activity).isDestroyed && !(lifecycleOwner as Activity).isFinishing){
+                    Glide.with(context)
+                        .load(imgBitmap)
+                        .centerCrop()
+                        .placeholder(R.drawable.picture1)
+                        .into(holder.slika)
+                }
             }
             catch(e: Exception){
-                Glide.with(context)
-                    .load(R.drawable.picture1)
-                    .centerCrop()
-                    .placeholder(R.drawable.picture1)
-                    .into(holder.slika)
+                if(!(lifecycleOwner as Activity).isDestroyed && !(lifecycleOwner as Activity).isFinishing){
+                    Glide.with(context)
+                        .load(R.drawable.picture1)
+                        .centerCrop()
+                        .placeholder(R.drawable.picture1)
+                        .into(holder.slika)
+                }
             }
         }
 
