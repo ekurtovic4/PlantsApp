@@ -14,6 +14,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import ba.unsa.etf.rma.projekat.web.TrefleDAO
 
+typealias BiljkaDAO = BiljkaDatabase.BiljkaDAO
+
 @Database(entities = [Biljka::class, BiljkaBitmap::class], version = 4)
 @TypeConverters(Converters::class)
 abstract class BiljkaDatabase : RoomDatabase() {

@@ -5,6 +5,7 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
+import ba.unsa.etf.rma.projekat.dataetc.BiljkaDAO
 import ba.unsa.etf.rma.projekat.dataetc.BiljkaDatabase
 import ba.unsa.etf.rma.projekat.dataetc.KlimatskiTip
 import ba.unsa.etf.rma.projekat.dataetc.MedicinskaKorist
@@ -20,7 +21,7 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class DatabaseTest {
     private lateinit var db: BiljkaDatabase
-    private lateinit var biljkaDao: BiljkaDatabase.BiljkaDAO
+    private lateinit var biljkaDao: BiljkaDAO
 
     @Before
     fun createDb(){

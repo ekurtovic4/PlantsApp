@@ -19,6 +19,7 @@ import ba.unsa.etf.rma.projekat.adapters.BotanicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.CulinaryPlantListAdapter
 import ba.unsa.etf.rma.projekat.adapters.MedicalPlantListAdapter
 import ba.unsa.etf.rma.projekat.dataetc.Biljka
+import ba.unsa.etf.rma.projekat.dataetc.BiljkaDAO
 import ba.unsa.etf.rma.projekat.dataetc.BiljkaDatabase
 import ba.unsa.etf.rma.projekat.dataetc.getBiljke
 import ba.unsa.etf.rma.projekat.web.TrefleDAO
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private var trefleDAO = TrefleDAO()
     private var brzaPretragaMod = false
 
-    private lateinit var biljkaDao: BiljkaDatabase.BiljkaDAO
+    private lateinit var biljkaDao: BiljkaDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
