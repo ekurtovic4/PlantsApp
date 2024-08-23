@@ -1,2 +1,2 @@
 # Repozitorij za projekat iz predmeta Razvoj mobilnih aplikacija, 2023/2024 #
-U okviru ovog projekta je, kroz 4 spirale, razvijana aplikacija za biljke.
+U okviru ovog projekta je razvijana aplikacija za biljke. Rad na aplikaciji se odvijao kroz 4 spirale.
